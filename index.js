@@ -19,7 +19,7 @@ bot.on("message", message => {
     switch (args[0]) {
 
         case "commands":
-            message.channel.send("Comandos disponíveis: $play // $skip // $stop // $leave // $ará")
+            message.channel.send("Comandos disponíveis: $play // $skip // $stop // $leave // $kabum_price")
         break;
 
         case "play":
@@ -41,17 +41,17 @@ bot.on("message", message => {
                 });
             }
 
-            async function scrapeProduct(url){
+            async function scrapeMusic(url){
                 const browser = await puppeteer.launch();
                 const page = await browser.newPage();
                 await page.goto(url);
             
                 const [el] = await page.$x('//*[@id="video-title"]');
-                const src = await el.getProperty("href");
-                const srcTxt = await src.jsonValue();
+                const href = await el.getProperty("href");
+                const hrefTxt = await href.jsonValue();
             
                 browser.close();
-                return srcTxt;
+                return hrefTxt;
             }
 
             if(!args[1]){
@@ -79,7 +79,7 @@ bot.on("message", message => {
                 args.shift();
                 let musicName = args.join("+");
                 let searchUrl = `https://www.youtube.com/results?search_query=${musicName}`;
-                scrapeProduct(searchUrl).then((result) => {
+                scrapeMusic(searchUrl).then((result) => {
                     server.queue.push(result);
                     message.channel.send(`Coloquei ${result} na fila`);
                  })
@@ -91,7 +91,7 @@ bot.on("message", message => {
                     play(connection, message);
                 });
             }
-            setTimeout(startMusic, 5000)
+            setTimeout(startMusic, 8000)
         break;
 
         case "skip":
@@ -116,7 +116,7 @@ bot.on("message", message => {
             if(message.guild.voice && message.guild.me.voice ){
                 if(message.guild.voice.connection){
                     for(let i = serverStop.queue.length -1; i>= 0; i--){
-                        serverStop.queue.splite(i, 1);
+                        serverStop.queue.split(i, 1);
                     }
                     message.channel.send("Fim da lista. Estou saindo do chat de voz.");
                     serverStop.dispatcher.end()
@@ -133,6 +133,52 @@ bot.on("message", message => {
             }else{
                 message.channel.send("ME COLOCA NA CALL!!!!!!!");
             }
+        break;
+
+        case "ará":
+            message.channel.send({
+                files: ["./images/ara.jpeg"]
+              })
+        break;
+
+        case "kabum_price":
+            args.shift();
+            let productName = args.join(" ");
+            let productNameSearch = args.join("+");
+            let searchProduct = `https://www.kabum.com.br/cgi-local/site/listagem/listagem.cgi?string=${productNameSearch}&btnG=`;
+            async function scrapeProduct(url){
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+                await page.goto(url);
+            
+                const [el] = await page.$x('//*[@id="listagem-produtos"]/div/div[3]/div/div[2]/div[1]/div[3]');
+                const [elPromo] = await page.$x('//*[@id="listagem-produtos"]/div/div[3]/div/div[2]/div[1]/div[4]');
+                        const txtPromo = await elPromo.getProperty("textContent");
+ 
+                        const txt = await el.getProperty("textContent");
+                        let text;
+                        let txtProductName;
+                if(txtPromo){
+                    if(await txtPromo.jsonValue() !== "no boleto") {
+                        text = await txtPromo.jsonValue();
+                        const [elName] = await page.$x('//*[@id="listagem-produtos"]/div/div[3]/div/div[1]/a');
+                        txtProductName = await elName.getProperty("textContent");
+                    }else{
+                        text = await txt.jsonValue();
+                    }
+                }else{
+                    text = await txt.jsonValue();
+                }
+                const [elName] = await page.$x('//*[@id="listagem-produtos"]/div/div[3]/div/div[1]/a');
+                const nameProduct = await elName.getProperty("textContent");
+                productName = await nameProduct.jsonValue();
+
+                browser.close();
+                return text;
+            }
+            scrapeProduct(searchProduct).then((result) => {
+                message.channel.send(`O preço do ${productName} é ${result} à vista`);
+             })
         break;
 
     }
