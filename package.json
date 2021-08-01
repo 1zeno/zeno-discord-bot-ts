@@ -12,8 +12,10 @@
     "ytdl-core": "^4.9.0"
   },
   "scripts": {
-    "start": "ts-node index.ts",
-    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules index.ts"
+    "start": "node dist/index.js",
+    "deploy": "tsc && npm run start",
+    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules index.ts",
+    "delete": "rmdir dist /s /q"
   },
   "devDependencies": {
     "@types/puppeteer": "^5.4.4",
