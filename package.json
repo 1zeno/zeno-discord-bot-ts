@@ -12,7 +12,7 @@
     "ytdl-core": "^4.9.0"
   },
   "scripts": {
-    "build": "ts-node-dev --transpile-only --ignore-watch node_modules index.ts",
+    "start": "ts-node-dev --transpile-only --ignore-watch node_modules index.ts",
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules index.ts"
   },
   "devDependencies": {
