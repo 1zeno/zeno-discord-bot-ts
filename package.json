@@ -12,7 +12,7 @@
     "ytdl-core": "^4.9.0"
   },
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node ./dist/index.js",
     "deploy": "tsc && npm run start",
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules index.ts",
     "delete": "rmdir dist /s /q"
