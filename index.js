@@ -4,6 +4,7 @@ const token = require("./token.json");
 
 const ytdl = require("ytdl-core");
 const puppeteer = require("puppeteer");
+const axios = require("axios");
 
 const PREFIX = "$";
 
@@ -26,11 +27,25 @@ bot.on("message", message => {
             message.channel.send("Comandos disponíveis: $play // $skip // $stop // $leave // $kabum_price")
         break;
 
+        case "riot":
+            const request = async() => {
+                const result = await axios.post('https://mangalivre.net/lib/search/series.json',{ "search": "shingeki no kyojin"},{
+                    headers:{ "Content-Type": "application/json","X-Requested-With": "XMLHttpRequest"},
+                  });
+                const baseUrl = `https://mangalivre.net/manga/shingeki-no-kyojin/210`;
+                const completeUrl = baseUrl+result.data.series[0].link;
+                const resultSecond = await axios.post(completeUrl,{ "search": "shingeki no kyojin"},{
+                    headers:{ "Content-Type": "application/json","X-Requested-With": "XMLHttpRequest"},
+                });
+            };
+            request();
+            message.channel.send("<h1>aoba</h1>")
+        break;
+
         case "play":
             message.channel.send("Por favor, aguarde...");
 
-            function play (connection, message){
-                let server = servers[message.guild.id];
+            const play = (connection, message, server) => {
 
                 server.dispatcher = connection.play(ytdl(server.queue[0], { filter: "audioonly" }));
 
@@ -45,7 +60,7 @@ bot.on("message", message => {
                 });
             }
 
-            async function scrapeMusic(url){
+            const scrapeMusic = async(url) => {
                 const browser = await puppeteer.launch();
                 const page = await browser.newPage();
                 await page.goto(url);
@@ -92,7 +107,7 @@ bot.on("message", message => {
 
             const startMusic = () => {
                 if(!message.guild.me.voice.connection) message.member.voice.channel.join().then( ( connection ) => {
-                    play(connection, message);
+                    play(connection, message, server);
                 });
             }
             setTimeout(startMusic, 8000)

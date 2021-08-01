@@ -1,5 +1,9 @@
 {
+  "scripts": {
+    "dev": "node index.js"
+  },
   "dependencies": {
+    "axios": "^0.21.1",
     "discord.js": "^12.5.1",
     "opusscript": "^0.0.7",
     "puppeteer": "^5.5.0",
