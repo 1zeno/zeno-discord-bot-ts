@@ -1,5 +1,5 @@
-import puppeteer from "puppeteer";
-//const puppeteer = require("puppeteer");
+//import puppeteer from "puppeteer";
+const puppeteer = require("puppeteer");
 const scrapeMusic = async(url) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
