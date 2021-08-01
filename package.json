@@ -1,12 +1,23 @@
 {
-  "scripts": {
-    "dev": "node index.js"
-  },
+  "name": "zenobot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
   "dependencies": {
     "axios": "^0.21.1",
     "discord.js": "^12.5.1",
+    "dotenv": "^10.0.0",
     "opusscript": "^0.0.7",
-    "puppeteer": "^5.5.0",
-    "ytdl-core": "^4.2.1"
+    "puppeteer": "^10.1.0",
+    "ytdl-core": "^4.9.0"
+  },
+  "scripts": {
+    "build": "ts-node-dev --transpile-only --ignore-watch node_modules index.ts",
+    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules index.ts"
+  },
+  "devDependencies": {
+    "@types/puppeteer": "^5.4.4",
+    "ts-node-dev": "^1.1.1",
+    "typescript": "^4.2.2"
   }
 }

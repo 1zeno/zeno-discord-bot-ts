@@ -1,10 +1,12 @@
-const { Client } = require("discord.js");
-const bot = new Client();
-const token = require("./token.json");
+import { Client } from "discord.js";
+import dotenv from "dotenv";
+import puppeteer from "puppeteer";
+import axios from "axios";
 
-const ytdl = require("ytdl-core");
-const puppeteer = require("puppeteer");
-const axios = require("axios");
+import play from "./commands/play";
+
+dotenv.config();
+const bot = new Client();
 
 const PREFIX = "$";
 
@@ -43,74 +45,9 @@ bot.on("message", message => {
         break;
 
         case "play":
-            message.channel.send("Por favor, aguarde...");
 
-            const play = (connection, message, server) => {
-
-                server.dispatcher = connection.play(ytdl(server.queue[0], { filter: "audioonly" }));
-
-                server.queue.shift();
-
-                server.dispatcher.on("finish", function(){
-                    if(server.queue[0]){
-                        play(connection, message);
-                    }else{
-                        connection.disconnect();
-                    }
-                });
-            }
-
-            const scrapeMusic = async(url) => {
-                const browser = await puppeteer.launch();
-                const page = await browser.newPage();
-                await page.goto(url);
+            play(args, message, servers);
             
-                const [el] = await page.$x('//*[@id="video-title"]');
-                const href = await el.getProperty("href");
-                const hrefTxt = await href.jsonValue();
-            
-                browser.close();
-                return hrefTxt;
-            }
-
-            if(!args[1]){
-                message.channel.send("você precisa enviar um link!");
-                return;
-            }
-
-            if(!message.member.voice.channel){
-                message.channel.send("você precisa estar em um canal para utilizar esse comando!");
-                return;
-            }
-
-            if(!servers[message.guild.id]) servers[message.guild.id] = {
-                queue: []
-            };
-
-            let server = servers[message.guild.id];
-
-            let ytbUrl = args[1].split("=");
-            
-            if(ytbUrl[0] === "https://www.youtube.com/watch?v") {
-                server.queue.push(args[1]);
-                message.channel.send("Sua música foi adicionada na fila!");
-            }else{
-                args.shift();
-                let musicName = args.join("+");
-                let searchUrl = `https://www.youtube.com/results?search_query=${musicName}`;
-                scrapeMusic(searchUrl).then((result) => {
-                    server.queue.push(result);
-                    message.channel.send(`Coloquei ${result} na fila`);
-                 })
-               
-            }
-
-            const startMusic = () => {
-                if(!message.guild.me.voice.connection) message.member.voice.channel.join().then( ( connection ) => {
-                    play(connection, message, server);
-                });
-            }
-            setTimeout(startMusic, 8000)
         break;
 
         case "skip":
@@ -154,18 +91,12 @@ bot.on("message", message => {
             }
         break;
 
-        case "ará":
-            message.channel.send({
-                files: ["./images/ara.jpeg"]
-              })
-        break;
-
         case "kabum_price":
             args.shift();
             let productName = args.join(" ");
             let productNameSearch = args.join("+");
             let searchProduct = `https://www.kabum.com.br/cgi-local/site/listagem/listagem.cgi?string=${productNameSearch}&btnG=`;
-            async function scrapeProduct(url){
+            const scrapeProduct = async (url) => {
                 const browser = await puppeteer.launch();
                 const page = await browser.newPage();
                 await page.goto(url);
@@ -203,4 +134,4 @@ bot.on("message", message => {
     }
 });
 
-bot.login(token.BOT_TOKEN);
+bot.login(process.env.BOT_TOKEN);
