@@ -9,10 +9,11 @@
     "dotenv": "^10.0.0",
     "opusscript": "^0.0.7",
     "puppeteer": "^10.1.0",
-    "ytdl-core": "^4.9.0"
+    "ytdl-core": "^4.9.0",
+    "typescript": "^4.3.5"
   },
   "scripts": {
-    "build":"tsc",
+    "build": "tsc",
     "start": "node dist/src/index.js",
     "deploy": "tsc && npm run start",
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/index.ts",
@@ -20,7 +21,6 @@
   },
   "devDependencies": {
     "@types/puppeteer": "^5.4.4",
-    "ts-node-dev": "^1.1.1",
-    "typescript": "^4.2.2"
+    "ts-node-dev": "^1.1.1"
   }
 }
