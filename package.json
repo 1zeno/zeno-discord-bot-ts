@@ -14,8 +14,9 @@
   },
   "scripts": {
     "start": "node ./dist/index.js",
+    "test":"ts-node src/index.ts",
     "deploy": "tsc && npm run start",
-    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules index.ts",
+    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/index.ts",
     "delete": "rmdir dist /s /q"
   },
   "devDependencies": {
