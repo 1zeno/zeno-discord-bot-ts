@@ -2,7 +2,6 @@ import { Client } from "discord.js";
 import dotenv from "dotenv";
 import puppeteer from "puppeteer";
 import axios from "axios";
-
 import play from "./commands/play";
 
 dotenv.config();
@@ -45,9 +44,9 @@ bot.on("message", message => {
         break;
 
         case "play":
-
-            play(args, message, servers);
             
+            play(args, message, servers);
+
         break;
 
         case "skip":
