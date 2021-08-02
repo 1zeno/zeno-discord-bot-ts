@@ -7,14 +7,12 @@
     "axios": "^0.21.1",
     "discord.js": "^12.5.1",
     "dotenv": "^10.0.0",
-    "ffmpeg": "^0.0.4",
     "opusscript": "^0.0.7",
     "puppeteer": "^10.1.0",
-    "ts-node": "^10.1.0",
     "ytdl-core": "^4.9.0"
   },
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "node src/index.js",
     "deploy": "tsc && npm run start",
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/index.ts",
     "delete": "rmdir dist /s /q"
