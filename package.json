@@ -10,12 +10,12 @@
     "ffmpeg": "^0.0.4",
     "opusscript": "^0.0.7",
     "puppeteer": "^10.1.0",
+    "ts-node": "^10.1.0",
     "ytdl-core": "^4.9.0"
   },
   "scripts": {
-    "deploy": "node ./dist/index.js",
-    "test":"ts-node src/index.ts",
-    "start": "tsc && npm run deploy",
+    "start": "ts-node src/index.ts",
+    "deploy": "tsc && npm run start",
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/index.ts",
     "delete": "rmdir dist /s /q"
   },
