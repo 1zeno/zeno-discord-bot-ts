@@ -20,7 +20,10 @@ bot.on("ready", () => {
 bot.on("message", message => {
 
     const prefixMessage = message.content.split("")[0];
-    if(prefixMessage !== PREFIX) return;
+
+    if(prefixMessage !== PREFIX) {
+        return;
+    }
 
     let args = message.content.substring(PREFIX.length).split(" ");
 
