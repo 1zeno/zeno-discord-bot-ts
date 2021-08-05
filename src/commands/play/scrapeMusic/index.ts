@@ -1,8 +1,8 @@
 import puppeteer from "puppeteer";
-//const puppeteer = require("puppeteer");
+
 const scrapeMusic = async(url) => {
     try{
-        const browser = await puppeteer.launch({ignoreDefaultArgs: ['--disable-extensions']});
+        const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
         const page = await browser.newPage();
         await page.goto(url);
     
