@@ -12,11 +12,10 @@
     "ytdl-core": "^4.9.0"
   },
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/src/index.js",
-    "deploy": "tsc && npm run start",
+    "build": "rimraf dist && tsc",
+    "start": "node dist/index.js",
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/index.ts",
-    "delete": "rmdir dist /s /q"
+    "delete": "rimraf dist"
   },
   "devDependencies": {
     "@types/puppeteer": "^5.4.4",
