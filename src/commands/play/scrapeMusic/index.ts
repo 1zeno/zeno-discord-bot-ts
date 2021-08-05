@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 
-const scrapeMusic = async(url) => {
+const scrapeMusic = async(url: string) => {
     try{
         const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
         const page = await browser.newPage();
@@ -11,7 +11,7 @@ const scrapeMusic = async(url) => {
         const hrefTxt = await href.jsonValue();
     
         browser.close();
-        return hrefTxt;
+        return hrefTxt as string;
     }catch(e){
         console.log("Ocorreu um erro ao iniciar scrapeMusic", e.message);
     }

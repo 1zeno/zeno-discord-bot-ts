@@ -1,6 +1,8 @@
 import ytdl from "ytdl-core";
-//const ytdl = require("ytdl-core");
-const playMusic = (connection, message, server) => {
+import { VoiceConnection, Message } from "discord.js";
+import { Server } from "../../../";
+
+const playMusic = (connection: VoiceConnection, message: Message, server: Server) => {
 
     server.dispatcher = connection.play(ytdl(server.queue[0], { filter: "audioonly" }));
 

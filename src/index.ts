@@ -1,14 +1,17 @@
-import { Client } from "discord.js";
+import { Client, StreamDispatcher } from "discord.js";
 import dotenv from "dotenv";
 import axios from "axios";
 import play from "./commands/play";
 
+export type Server = { queue: string[], dispatcher?: StreamDispatcher };
+export type Servers = Record<string, Server>;
+
 dotenv.config();
 const bot = new Client();
 
-const PREFIX = "$";
+const PREFIX = process.env.PREFIX || "$";
 
-let servers = {};
+let servers: Servers = {};
 
 bot.on("ready", () => {
     console.log("BIG BOT Zeno está online!");
@@ -25,19 +28,6 @@ bot.on("message", message => {
 
         case "commands":
             message.channel.send("Comandos disponíveis: $play // $skip // $stop // $leave // $kabum_price")
-        break;
-
-        case "manga":
-            const request = async() => {
-                const result = await axios.post('https://mangalivre.net/lib/search/series.json',{ "search": "shingeki no kyojin"},{
-                    headers:{ "Content-Type": "application/json","X-Requested-With": "XMLHttpRequest"},
-                  });
-                const baseUrl = `https://mangalivre.net/manga/shingeki-no-kyojin/210`;
-                const completeUrl = baseUrl+result.data.series[0].link;
-                const resultSecond = await axios.post(completeUrl,{ "search": "shingeki no kyojin"},{
-                    headers:{ "Content-Type": "application/json","X-Requested-With": "XMLHttpRequest"},
-                });
-            };
         break;
 
         case "play":
