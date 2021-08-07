@@ -9,8 +9,8 @@ export type Servers = Record<string, Server>;
 dotenv.config();
 const bot = new Client();
 
-const PREFIX = process.env.PREFIX || "$";
-
+const PREFIX = process.env.PREFIX;
+let timeout = [];
 let servers: Servers = {};
 
 bot.on("ready", () => {
@@ -30,22 +30,30 @@ bot.on("message", message => {
     switch (args[0]) {
 
         case "commands":
-            message.channel.send("Comandos disponíveis: $play // $skip // $stop // $leave // $kabum_price")
+            message.channel.send("```Comandos disponíveis: $play ,$skip // $stop //```");
         break;
 
         case "play":
             
-            play(args, message, servers);
+            play(args, message, servers, timeout);
 
         break;
 
         case "skip":
-            let serverSkip = servers[message.guild.id];
+            let server = servers[message.guild.id];
 
             if(message.guild.voice && message.guild.me.voice ){
-                if(serverSkip){
-                    if(serverSkip.dispatcher) serverSkip.dispatcher.end();
-                    message.channel.send("Pulou uma música.");
+                if(server){
+                    if(server.dispatcher) {
+                        server.dispatcher.end();
+                        setTimeout(() => {
+                            if(server.queue.length < 1 && message.guild.voice.connection && server.dispatcher.writableEnded){
+                                message.guild.voice.connection.disconnect();
+                            }
+                        }, 900000);
+                    }else{
+                        message.channel.send("Pulou uma música.");
+                    }
                 }else{
                     message.channel.send("Não tem nada pra pular.");
                 }
@@ -74,7 +82,9 @@ bot.on("message", message => {
 
         case "leave":
             if(message.guild.voice){
-                if(message.guild.voice.connection) message.guild.voice.connection.disconnect();
+                if(message.guild.voice.connection) {
+                    message.guild.voice.connection.disconnect();
+                };
             }else{
                 message.channel.send("ME COLOCA NA CALL!!!!!!!");
             }
