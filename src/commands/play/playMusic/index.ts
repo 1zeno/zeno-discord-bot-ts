@@ -2,7 +2,7 @@ import ytdl from "ytdl-core";
 import { VoiceConnection, Message } from "discord.js";
 import { Server } from "../../../";
 
-const playMusic = (connection: VoiceConnection, message: Message, server: Server, timeout: any) => {
+const playMusic = (connection: VoiceConnection, message: Message, server: Server) => {
 
     server.dispatcher = connection.play(ytdl(server.queue[0], { filter: "audioonly" }));
 
@@ -10,7 +10,7 @@ const playMusic = (connection: VoiceConnection, message: Message, server: Server
 
     server.dispatcher.on("finish", function(){
         if(server.queue.length > 0){
-            playMusic(connection, message, server, timeout);
+            playMusic(connection, message, server);
         }else{
             connection.voiceManager.client.setTimeout(() => {
                 if(server.queue.length < 1 && server.dispatcher.writableEnded){

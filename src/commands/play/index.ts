@@ -3,7 +3,7 @@ import playMusic from "./playMusic";
 import { Message } from "discord.js";
 import { Servers, Server } from "../../";
 
-const play = async (args: string[], message: Message, servers: Servers , timeout: any) => {
+const play = async (args: string[], message: Message, servers: Servers , setReadyToPlay: (value: boolean) => void) => {
     message.channel.send("Por favor, aguarde...");
 
     if(!args[1]){
@@ -37,9 +37,15 @@ const play = async (args: string[], message: Message, servers: Servers , timeout
         args.shift();
         let musicName: string = args.join("+");
         let searchUrl: string = `https://www.youtube.com/results?search_query=${musicName}`;
-        const result = await scrapeMusic(searchUrl)
-        pushQueue(result);
-        message.channel.send(`Coloquei ${result} na fila`);
+        try{
+            setReadyToPlay(false);
+            const url = await scrapeMusic(searchUrl);
+            pushQueue(url);
+            setReadyToPlay(true);
+            message.channel.send(`Coloquei ${url} na fila`);
+        }catch(e){
+
+        }
 
     
     };
@@ -48,13 +54,13 @@ const play = async (args: string[], message: Message, servers: Servers , timeout
         if(!message.guild.me.voice.connection){
             try{
                 const connection = await message.member.voice.channel.join();
-                playMusic(connection, message, server, timeout);
+                playMusic(connection, message, server);
             }catch(e){
                 console.log("Erro ao iniciar música", e.message);
             }
         }else{
             if(server.queue.length === 1 && message.guild.me.voice.connection && server.dispatcher.writableEnded){
-                playMusic(message.guild.me.voice.connection, message, server, timeout);
+                playMusic(message.guild.me.voice.connection, message, server);
             }
         };
     };

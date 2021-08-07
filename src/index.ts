@@ -10,7 +10,7 @@ dotenv.config();
 const bot = new Client();
 
 const PREFIX = process.env.PREFIX;
-let timeout = [];
+let readyToPlay = true;
 let servers: Servers = {};
 
 bot.on("ready", () => {
@@ -27,6 +27,10 @@ bot.on("message", message => {
 
     let args = message.content.substring(PREFIX.length).split(" ");
 
+    const setReadyToPlay = (value: boolean) => {
+        readyToPlay = value;
+    }
+
     switch (args[0]) {
 
         case "commands":
@@ -34,8 +38,10 @@ bot.on("message", message => {
         break;
 
         case "play":
-            
-            play(args, message, servers, timeout);
+            if(!readyToPlay){
+                return message.channel.send("Aguarde a música anterior ser adicionada na fila.");
+            }
+            play(args, message, servers, setReadyToPlay);
 
         break;
 
