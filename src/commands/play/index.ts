@@ -53,7 +53,7 @@ const play = async (args: string[], message: Message, servers: Servers , timeout
                 console.log("Erro ao iniciar música", e.message);
             }
         }else{
-            if(server.queue.length === 1 && message.guild.me.voice.connection){
+            if(server.queue.length === 1 && message.guild.me.voice.connection && server.dispatcher.writableEnded){
                 playMusic(message.guild.me.voice.connection, message, server, timeout);
             }
         };

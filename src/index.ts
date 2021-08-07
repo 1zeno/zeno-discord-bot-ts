@@ -68,11 +68,10 @@ bot.on("message", message => {
 
             if(message.guild.voice && message.guild.me.voice ){
                 if(message.guild.voice.connection){
-                    for(let i = serverStop.queue.length -1; i>= 0; i--){
-                        serverStop.queue.slice(i, 1);
-                    }
+                    serverStop.queue = [];
                     message.channel.send("Fim da lista. Estou saindo do chat de voz.");
                     serverStop.dispatcher.end()
+                    message.guild.voice.connection.disconnect();
                 }
             }else{
                 message.channel.send("ME COLOCA NA SUA CALL!!!!!!!");
