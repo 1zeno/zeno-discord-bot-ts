@@ -41,10 +41,11 @@ const play = async (args: string[], message: Message, servers: Servers , setRead
             setReadyToPlay(false);
             const url = await scrapeMusic(searchUrl);
             pushQueue(url);
-            setReadyToPlay(true);
             message.channel.send(`Coloquei ${url} na fila`);
         }catch(e){
-
+            console.log(e.message);
+        }finally{
+            setReadyToPlay(true);
         }
 
     
