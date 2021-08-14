@@ -13,6 +13,10 @@ const PREFIX = process.env.PREFIX;
 let readyToPlay = true;
 let servers: Servers = {};
 
+const setReadyToPlay = (value: boolean) => {
+    readyToPlay = value;
+}
+
 bot.on("ready", () => {
     console.log("BIG BOT Zeno está online!");
 });
@@ -27,14 +31,10 @@ bot.on("message", message => {
 
     let args = message.content.substring(PREFIX.length).split(" ");
 
-    const setReadyToPlay = (value: boolean) => {
-        readyToPlay = value;
-    }
-
     switch (args[0]) {
 
         case "commands":
-            message.channel.send("```Comandos disponíveis: $play ,$skip // $stop //```");
+            message.channel.send("```Comandos disponíveis:\n$play [nome da música ou link do youtube], \n$skip (pula uma música), \n$stop (tira todas as músicas da fila e sai da chamada), \n$leave (sai da chamada)```");
         break;
 
         case "play":
@@ -51,17 +51,18 @@ bot.on("message", message => {
             if(message.guild.voice && message.guild.me.voice ){
                 if(server){
                     if(server.dispatcher) {
+                        if(server.dispatcher.writableEnded){
+                            message.channel.send("Não tem nada pra pular.");
+                        }else{
+                            message.channel.send("Pulou uma música.");
+                        };
                         server.dispatcher.end();
                         setTimeout(() => {
                             if(server.queue.length < 1 && message.guild.voice.connection && server.dispatcher.writableEnded){
                                 message.guild.voice.connection.disconnect();
                             }
                         }, 900000);
-                    }else{
-                        message.channel.send("Pulou uma música.");
                     }
-                }else{
-                    message.channel.send("Não tem nada pra pular.");
                 }
             }else{
                 message.channel.send("ME COLOCA NA SUA CALL!!!!!!!");
