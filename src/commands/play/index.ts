@@ -65,8 +65,7 @@ const play = async (args: string[], message: Message, servers: Servers , setRead
             }
         };
     };
-
-    setTimeout(startMusic, 8000);
+    startMusic();
 }
 
 export default play;
